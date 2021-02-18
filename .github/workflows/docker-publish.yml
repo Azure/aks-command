@@ -59,8 +59,8 @@ jobs:
 
       - name: Push image
         run: |
-          INIT_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$INIT_IMAGE_NAME
-          RUNTIME_IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$RUNTIME_IMAGE_NAME
+          INIT_IMAGE_ID=ghcr.io/azure/aks/command/$INIT_IMAGE_NAME
+          RUNTIME_IMAGE_ID=ghcr.io/azure/aks/command/$RUNTIME_IMAGE_NAME
 
           # Change all uppercase to lowercase
           INIT_IMAGE_ID=$(echo $INIT_IMAGE_ID | tr '[A-Z]' '[a-z]')
