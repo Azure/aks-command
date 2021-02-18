@@ -79,5 +79,8 @@ jobs:
           echo RUNTIME_IMAGE_ID=$RUNTIME_IMAGE_ID
           echo VERSION=$VERSION
 
-          #docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          #docker push $IMAGE_ID:$VERSION
+          docker tag $INIT_IMAGE_NAME $INIT_IMAGE_ID:$VERSION
+          docker push $INIT_IMAGE_ID:$VERSION
+          
+          docker tag $RUNTIME_IMAGE_NAME $RUNTIME_IMAGE_ID:$VERSION
+          docker push $RUNTIME_IMAGE_ID:$VERSION
