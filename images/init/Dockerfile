@@ -1,3 +1,4 @@
-FROM ubuntu:latest
+# mcr.microsoft.com/public/aks/command/init
+FROM alpine:latest
 
-RUN apt update & apt install -y unzip inotify-tools & apt clean
+RUN apk --no-cache add unzip inotify-tools
