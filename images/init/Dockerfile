@@ -1,3 +1,3 @@
-FROM ubuntu:latest
+FROM alpine:latest
 
-RUN apt update & apt install -y unzip inotify-tools & apt clean
+RUN apk add unzip inotify-tools
