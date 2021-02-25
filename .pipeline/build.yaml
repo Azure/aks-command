@@ -9,6 +9,7 @@ jobs:
     displayName: "[Public Images] Prepare config"
     steps:
       - script: |
+          set -e
           echo "${AKS_ACR_REGISTRY_PASSWORD}" | docker login $(MCR_ONBOARDING_ACR_REGISTRY) -u $(AKS_ACR_REGISTRY_USERNAME) --password-stdin
 
           INIT_IMAGE_ID=$(MCR_ONBOARDING_ACR_REGISTRY)/public/aks/command/init
@@ -19,7 +20,7 @@ jobs:
           RUNTIME_IMAGE_ID=$(echo $RUNTIME_IMAGE_ID | tr '[A-Z]' '[a-z]')
 
           # Strip git ref prefix from version
-          VERSION="test"
+          VERSION="alpha"
 
           # Strip "v" prefix from tag name
 
@@ -31,10 +32,10 @@ jobs:
           echo VERSION=$VERSION
 
           cd images/init && docker build . --file Dockerfile --tag $INIT_IMAGE_ID:$VERSION && cd ../../
-          echo docker push $INIT_IMAGE_ID:$VERSION
+          docker push $INIT_IMAGE_ID:$VERSION
 
           cd images/runtime && docker build . --file Dockerfile --tag $RUNTIME_IMAGE_ID:$VERSION && cd ../../
-          echo docker push $RUNTIME_IMAGE_ID:$VERSION
+          docker push $RUNTIME_IMAGE_ID:$VERSION
 
           echo $(Rev:.r)
           echo $(Rev:rr)
