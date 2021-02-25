@@ -19,10 +19,11 @@ jobs:
           RUNTIME_IMAGE_ID=$(echo $RUNTIME_IMAGE_ID | tr '[A-Z]' '[a-z]')
 
           # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # VERSION=$(echo "$(Rev:.rr)" | sed -e 's,.*/\(.*\),\1,')
+          VERSION="test"
 
           # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
           # Use Docker `latest` tag convention
           [ "$VERSION" == "main" ] && VERSION=latest
@@ -31,11 +32,15 @@ jobs:
           echo RUNTIME_IMAGE_ID=$RUNTIME_IMAGE_ID
           echo VERSION=$VERSION
 
-          cd images/init && docker build . --file Dockerfile --tag $INIT_IMAGE_ID && cd ../../
+          cd images/init && docker build . --file Dockerfile --tag $INIT_IMAGE_ID:$VERSION && cd ../../
           echo docker push $INIT_IMAGE_ID:$VERSION
 
-          cd images/runtime && docker build . --file Dockerfile --tag $RUNTIME_IMAGE_ID && cd ../../
+          cd images/runtime && docker build . --file Dockerfile --tag $RUNTIME_IMAGE_ID:$VERSION && cd ../../
           echo docker push $RUNTIME_IMAGE_ID:$VERSION
+
+          echo $(Rev:.r)
+          echo $(Rev:rr)
+          echo $(Rev:.rr)
         name: config
         env:
           REGISTRY_PASSWORD: $(AKS_ACR_REGISTRY_PASSWORD)
