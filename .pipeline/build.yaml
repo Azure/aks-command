@@ -1,13 +1,11 @@
-variables:
-  AKS_BUILD_AGENTPOOL_NAME: AKS-Elastic-Prod-Pool-V2
+pool:
+  name: AKS-Elastic-Prod-Pool-V2
 
 trigger:
   - main
 
 jobs:
   - job: build_and_publish
-      pool:
-        name: $(AKS_BUILD_AGENTPOOL_NAME)
     displayName: "[Public Images] Prepare config"
     steps:
       - script: |
