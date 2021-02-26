@@ -1,0 +1,38 @@
+trigger:
+  - main
+
+jobs:
+  - job: build_and_publish
+    displayName: "Public Docker Images"
+    steps:
+      - script: |
+          set -e
+          echo ${REGISTRY_PASSWORD} | docker login $(MCR_ONBOARDING_ACR_REGISTRY) -u $(AKS_ACR_REGISTRY_USERNAME) --password-stdin
+
+          INIT_IMAGE_ID=$(MCR_ONBOARDING_ACR_REGISTRY)/public/aks/command/init
+          RUNTIME_IMAGE_ID=$(MCR_ONBOARDING_ACR_REGISTRY)/public/aks/command/runtime
+
+          # Change all uppercase to lowercase
+          INIT_IMAGE_ID=$(echo $INIT_IMAGE_ID | tr '[A-Z]' '[a-z]')
+          RUNTIME_IMAGE_ID=$(echo $RUNTIME_IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version
+          VERSION="alpha"
+
+          # Strip "v" prefix from tag name
+
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "main" ] && VERSION=latest
+
+          echo INIT_IMAGE_ID=$INIT_IMAGE_ID
+          echo RUNTIME_IMAGE_ID=$RUNTIME_IMAGE_ID
+          echo VERSION=$VERSION
+
+          cd images/init && docker build . --file Dockerfile --tag $INIT_IMAGE_ID:$VERSION && cd ../../
+          docker push $INIT_IMAGE_ID:$VERSION
+
+          cd images/runtime && docker build . --file Dockerfile --tag $RUNTIME_IMAGE_ID:$VERSION && cd ../../
+          docker push $RUNTIME_IMAGE_ID:$VERSION
+        name: config
+        env:
+          REGISTRY_PASSWORD: $(AKS_ACR_REGISTRY_PASSWORD)
