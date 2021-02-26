@@ -1,6 +1,3 @@
-pool:
-  name: AKS-Elastic-Prod-Pool-V2
-
 trigger:
   - main
 
@@ -36,10 +33,6 @@ jobs:
 
           cd images/runtime && docker build . --file Dockerfile --tag $RUNTIME_IMAGE_ID:$VERSION && cd ../../
           docker push $RUNTIME_IMAGE_ID:$VERSION
-
-          echo $(Rev:.r)
-          echo $(Rev:rr)
-          echo $(Rev:.rr)
         name: config
         env:
           REGISTRY_PASSWORD: $(AKS_ACR_REGISTRY_PASSWORD)
