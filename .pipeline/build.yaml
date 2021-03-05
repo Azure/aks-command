@@ -4,6 +4,8 @@ trigger:
 jobs:
   - job: build_and_publish
     displayName: "Public Docker Images"
+    variables:
+      IMAGE_TAG: $(Build.BuildNumber)
     steps:
       - script: |
           set -e
@@ -17,12 +19,7 @@ jobs:
           RUNTIME_IMAGE_ID=$(echo $RUNTIME_IMAGE_ID | tr '[A-Z]' '[a-z]')
 
           # Strip git ref prefix from version
-          VERSION="alpha"
-
-          # Strip "v" prefix from tag name
-
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "main" ] && VERSION=latest
+          VERSION="$(IMAGE_TAG)"
 
           echo INIT_IMAGE_ID=$INIT_IMAGE_ID
           echo RUNTIME_IMAGE_ID=$RUNTIME_IMAGE_ID
