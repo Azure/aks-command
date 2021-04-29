@@ -1,8 +1,6 @@
 # mcr.microsoft.com/public/aks/command/runtime
-FROM alpine:latest
+FROM mcr.microsoft.com/oss/kubernetes/kubectl:v1.18.18
 
-RUN apk --no-cache add curl bash
-RUN mkdir /k8stools
-RUN curl -L https://dl.k8s.io/release/v1.18.16/bin/linux/amd64/kubectl -o /k8stools/kubectl && chmod +x /k8stools/kubectl
-RUN cd /tmp && curl -L https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz | tar -zxvf - && mv linux-amd64/helm /k8stools/ && rm -rf /tmp/linux-amd64
-ENV PATH "$PATH:/k8stools"
+USER root
+RUN apt update && apt install -y curl unzip inotify-tools && apt clean
+RUN cd /tmp && curl -L https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz | tar -zxvf - && mv linux-amd64/helm /bin/ && rm -rf /tmp/linux-amd64
